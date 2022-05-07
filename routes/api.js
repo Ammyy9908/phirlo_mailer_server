@@ -6,7 +6,7 @@ router
     const mailer_list = await Mailer.find();
     res.json(mailer_list);
   })
-  .post("/new", async (req, res) => {
+  .post("/new/mail", async (req, res) => {
     const { contact } = req.body;
 
     if (!contact) {
