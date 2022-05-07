@@ -6,7 +6,8 @@ router
     const mailer_list = await Mailer.find();
     res.json(mailer_list);
   })
-  .post("/new/mail", async (req, res) => {
+  .post("/new/:type", async (req, res) => {
+    const { type } = req.params;
     const { contact } = req.body;
 
     if (!contact) {
@@ -15,9 +16,16 @@ router
     //check is already subscribed
 
     const mailer_list = await Mailer.find();
-    const filtered_mailer_list = mailer_list.filter(
-      (mailer) => mailer.contact.email === contact.email
-    );
+    let filtered_mailer_list;
+    if (type === "email") {
+      filtered_mailer_list = mailer_list.filter(
+        (mailer) => mailer.contact.email === contact.email
+      );
+    } else {
+      filtered_mailer_list = mailer_list.filter(
+        (mailer) => mailer.contact.phone === contact.phone
+      );
+    }
     if (filtered_mailer_list.length > 0) {
       return res.status(401).json({
         message: "Already subscribed",
